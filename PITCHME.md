@@ -4,6 +4,12 @@
 
 #HSLIDE
 
+```elixir
+[1, :two, "three", %{four: 4}, 'five', [6, [:seven], "eight"]]
+```
+
+#HSLIDE
+
 ### [head | tail]
 
 ```
