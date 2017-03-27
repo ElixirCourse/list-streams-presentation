@@ -172,7 +172,9 @@ for x <- [1,2], y <- [3,4], do: {x, y}
 #HSLIDE
 
 ```elixir
-for x <- ~w{ cat dog elephant mammut }, into: %{"fish" => 4}, do: {x, String.length(x)}
+for x <- ~w{ cat dog elephant mammut },
+  into: %{"fish" => 4},
+  do: {x, String.length(x)}
 # => %{"cat" => 3, "dog" => 3, "elephant" => 8, "fish" => 4, "mammut" => 6}
 ```
 
