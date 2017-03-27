@@ -218,8 +218,6 @@ File.stream!("binaries.md")
 ```elixir
 defmodule WarAndPiece do
   def number_of_words_with_enum do
-    # Можете да свалите файла със:
-    # curl http://www.gutenberg.org/files/2600/2600-0.txt > war_and_piece.txt
     File.read!("war_and_piece.txt")
     |> String.split
     |> length
