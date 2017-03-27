@@ -256,36 +256,7 @@ Stream.unfold({0, 1}, fn {a, b} -> {a, {b, a + b}} end)
 
 #HSLIDE
 
-```elixir
-defmodule RenderTable do
-  def render(list) do
-    [
-      "<table>\n",
-      "  <tr>\n",
-      "    <th>Items</th>\n",
-      "  </tr>\n",
-      render_list(list),
-      "</table>"
-    ]
-  end
-
-  defp render_list(list) do
-    Stream.cycle(["odd", "even"])
-    |> Enum.zip(list)
-    |> Enum.map(&render_item/1)
-  end
-
-  defp render_item({class, item}) do
-    [
-      "<tr>\n",
-      "  <td class=\"", class, "\">\n",
-      "    ", item, "\n",
-      "  </td>\n",
-      "</tr>\n"
-    ]
-  end
-end
-```
+### HTML rendering example
 
 #HSLIDE
 
