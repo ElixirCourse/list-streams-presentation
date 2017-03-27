@@ -85,7 +85,9 @@ b = [0 | a]
 ```elixir
 defmodule ListUtils do
   def map([], _func), do: []
-  def map([head | tail], func), do: [func.(head) | map(tail, func)]
+  def map([head | tail], func) do
+    [func.(head) | map(tail, func)]
+  end
 end
 
 ListUtils.map([1,2,3,4,5], fn x -> x * x end) # => [1,4,9,16,25]
@@ -98,22 +100,12 @@ ListUtils.map([1,2,3,4,5], fn x -> x * x end) # => [1,4,9,16,25]
 ```elixir
 defmodule ListUtils do
   def reduce([], acc, _func), do: acc
-  def reduce([head | tail], acc, func), do: reduce(tail, func.(head, acc), func)
+  def reduce([head | tail], acc, func) do
+    reduce(tail, func.(head, acc), func)
+  end
 end
 
 ListUtils.reduce(["cat", "dog", "horse"], 0, fn _head, acc -> 1 + acc end) # => 3
-```
-
-#HSLIDE
-
-### Guard клаузи при дефиниране на функции
-
-```elixir
-defmodule Fibonachi do
-  def of(1), do: 1
-  def of(2), do: 1
-  def of(n) when is_number(n), do: of(n - 1) + of(n - 2)
-end
 ```
 
 #HSLIDE
