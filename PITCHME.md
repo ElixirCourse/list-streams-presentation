@@ -104,8 +104,6 @@ defmodule ListUtils do
     reduce(tail, func.(head, acc), func)
   end
 end
-
-ListUtils.reduce(["cat", "dog", "horse"], 0, fn _head, acc -> 1 + acc end) # => 3
 ```
 
 #HSLIDE
