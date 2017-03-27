@@ -173,9 +173,9 @@ for x <- [1,2], y <- [3,4], do: {x, y}
 
 ```elixir
 for x <- ~w{ cat dog elephant mammut },
-  into: %{"fish" => 4},
+  into: %{},
   do: {x, String.length(x)}
-# => %{"cat" => 3, "dog" => 3, "elephant" => 8, "fish" => 4, "mammut" => 6}
+# => %{"cat" => 3, "dog" => 3, "elephant" => 8, "mammut" => 6}
 ```
 
 #HSLIDE
@@ -229,11 +229,6 @@ defmodule WarAndPiece do
     |> Enum.reduce(0, fn _, acc -> acc + 1 end)
   end
 end
-
-:timer.tc(WarAndPiece, :number_of_words_with_enum, [])
-# => {1561933, 566309}
-:timer.tc(WarAndPiece, :number_of_words_with_stream, [])
-# => {833594, 566309}
 ```
 
 #HSLIDE
