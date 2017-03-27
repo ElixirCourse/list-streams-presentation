@@ -249,7 +249,8 @@ Stream.cycle([1])
 #HSLIDE
 
 ```elixir
-Stream.unfold({0, 1}, fn {a, b} -> {a, {b, a + b}} end) |> Enum.take(10)
+Stream.unfold({0, 1}, fn {a, b} -> {a, {b, a + b}} end)
+|> Enum.take(10)
 # => [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
 ```
 
