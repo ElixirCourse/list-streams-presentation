@@ -1,82 +1,6 @@
-### Списъци, потоци и рекурсия
+### Модулите Enum и Stream
 
 Валентин Михов
-
-#HSLIDE
-
-```elixir
-[1, :two, "three", %{four: 4}, 'five', [6, [:seven], "eight"]]
-```
-
-#HSLIDE
-
-### [head | tail]
-
-```
-+-+-+   +-+-+   +-+-+   +-+-+   +-+-+
-|1| |-->|2| |-->|3| |-->|4| |-->|5| |
-+-+-+   +-+-+   +-+-+   +-+-+   +-+-+
-```
-
-#HSLIDE
-
-### Шаблони
-
-```elixir
-[a | b] = [1,2,3]
-IO.puts a # 1
-IO.puts inspect(b) # [2, 3]
-```
-
-#HSLIDE
-
-### Обхождане
-
-```elixir
-defmodule ListUtils do
-  def length([]), do: 0
-  def length([_head | tail]), do: 1 + length(tail)
-end
-```
-
-#HSLIDE
-
-```
-ListUtils.length(["cat", "dog", "fish", "horse"])
-= 1 + ListUtils.length(["dog", "fish", "horse"])
-= 1 + 1 + ListUtils.length(["fish", "horse"])
-= 1 + 1 + 1 + ListUtils.length(["horse"])
-= 1 + 1 + 1 + 1 + ListUtils.length([])
-= 1 + 1 + 1 + 1 + 0
-= 4
-```
-
-#HSLIDE
-
-### Изграждане
-
-```elixir
-defmodule Square do
-  def of([]), do: []
-  def of([head | tail]), do: [head * head | of(tail)]
-end
-
-Square.of([1,2,3,4,5]) # => [1,4,9,16,25]
-```
-
-#HSLIDE
-
-```elixir
-a = [1,2,3]
-b = a ++ [4]
-```
-
-vs.
-
-```elixir
-a = [1,2,3]
-b = [0 | a]
-```
 
 #HSLIDE
 
@@ -85,6 +9,7 @@ b = [0 | a]
 ```elixir
 defmodule ListUtils do
   def map([], _func), do: []
+
   def map([head | tail], func) do
     [func.(head) | map(tail, func)]
   end
@@ -100,6 +25,7 @@ ListUtils.map([1,2,3,4,5], fn x -> x * x end) # => [1,4,9,16,25]
 ```elixir
 defmodule ListUtils do
   def reduce([], acc, _func), do: acc
+
   def reduce([head | tail], acc, func) do
     reduce(tail, func.(head, acc), func)
   end
@@ -119,26 +45,6 @@ ListUtils.reduce(["cat", "dog", "horse"], 0, add_one)
 = ListUtils.reduce(["horse"], 2, add_one)
 = ListUtils.reduce([], 3, add_one)
 = 3
-```
-
-#HSLIDE
-
-### Сложни шаблони
-
-```elixir
-defmodule Meteo do
-  def to_fahrenheit([]), do: []
-  def to_fahrenheit([%{temperature: temp} = head | tail]) do
-    [
-      %{head | temperature: c_to_f(temp)} |
-      to_fahrenheit(tail)
-    ]
-  end
-
-  defp c_to_f(celcius) do
-    celcius * 1.8 + 32
-  end
-end
 ```
 
 #HSLIDE
@@ -238,18 +144,45 @@ end
 ### Безкрайни потоци
 
 ```elixir
-Stream.cycle([1])
+Stream.cycle([1, 2])
 |> Enum.take(10)
-# => [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+# => [1, 2, 1, 2, 1, 2, 1, 2, 1, 2]
+```
+
+#HSLIDE
+
+
+```elixir
+Stream.unfold({0, 1}, fn {current, acc} -> {current, {acc, current + acc}} end)
+|> Enum.take(10)
+# => [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
 ```
 
 #HSLIDE
 
 ```elixir
-Stream.unfold({0, 1}, fn {a, b} -> {a, {b, a + b}} end)
-|> Enum.take(10)
-# => [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+Stream.resource(fn -> File.open!("sample") end,
+                fn file ->
+                  case IO.read(file, :line) do
+                    data when is_binary(data) -> {[data], file}
+                    _ -> {:halt, file}
+                  end
+                end,
+                fn file -> File.close(file) end)
 ```
+
+#HSLIDE
+
+### Data pipelines
+
+```elixir
+generate_day_ranges # [{"2018-01-01 00:00:00", "2018-01-01 23:59:59"}, ...]
+|> Stream.flat_map(&fetch_prices_for_interval) # Raw price data for every 5 min
+|> Stream.flat_map(&convert_to_price_point) # Prepare for import in the DB
+|> Store.import
+```
+
+See https://github.com/santiment/sanbase2/blob/master/lib/sanbase/external_services/coinmarketcap.ex#L131
 
 #HSLIDE
 
