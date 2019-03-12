@@ -153,7 +153,7 @@ Stream.cycle([1, 2])
 
 
 ```elixir
-Stream.unfold({0, 1}, fn {current, acc} -> {current, {acc, current + acc}} end)
+Stream.unfold({0, 1}, fn {a, b} -> {a, {b, a + b}} end)
 |> Enum.take(10)
 # => [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
 ```
@@ -175,18 +175,7 @@ Stream.resource(fn -> File.open!("sample") end,
 
 ### Data pipelines
 
-```elixir
-generate_day_ranges # [{"2018-01-01 00:00:00", "2018-01-01 23:59:59"}, ...]
-|> Stream.flat_map(&fetch_prices_for_interval) # Raw price data for every 5 min
-|> Stream.flat_map(&convert_to_price_point) # Prepare for import in the DB
-|> Store.import
-```
-
-See https://github.com/santiment/sanbase2/blob/master/lib/sanbase/external_services/coinmarketcap.ex#L131
-
-#HSLIDE
-
-### HTML rendering example
+Let's implement a Ripple data pipeline
 
 #HSLIDE
 
